@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+// ignore: unused_import
 import 'package:shopping/home_page.dart';
+import 'package:shopping/product_details_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -23,8 +25,13 @@ class MyApp extends StatelessWidget {
           hintStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           prefixIconColor: Color.fromRGBO(119, 119, 119, 1),
         ),
+        textTheme: TextTheme(
+          titleMedium: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+          bodySmall: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
       ),
-      home: const MyHomePage(),
+      debugShowCheckedModeBanner: false,
+      home: const ProductDetailsPage(),
     );
   }
 }
