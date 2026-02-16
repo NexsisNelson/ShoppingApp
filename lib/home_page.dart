@@ -1,7 +1,14 @@
+// ignore_for_file: unused_import
+
+// Import necessary packages
 import 'package:flutter/material.dart';
 import 'package:shopping/global_variables.dart';
 import 'package:shopping/product_card.dart';
+import 'package:shopping/product_details_page.dart';
+import 'package:shopping/product_list_.dart';
+import 'package:shopping/cart_page.dart';
 
+/// Main home page widget that provides navigation between product list and cart
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
 
@@ -9,101 +16,42 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
+/// State class for MyHomePage to manage page navigation
 class _MyHomePageState extends State<MyHomePage> {
-  final List<String> filters = const ['All', 'Addidas', 'Nike', 'Bata'];
-  late String selectedFilter;
+  /// Index of the currently displayed page
+  int currentPage = 0;
 
-  @override
-  void initState() {
-    super.initState();
-    selectedFilter = filters[0];
-  }
+  /// List of pages that can be navigated to (ProductList and Cart)
+  List<Widget> pages = const [ProductListPage(), CartPage()];
 
   @override
   Widget build(BuildContext context) {
-    final border = OutlineInputBorder(
-      borderSide: BorderSide(color: Color.fromRGBO(225, 225, 225, 1)),
-      borderRadius: BorderRadius.horizontal(left: Radius.circular(50)),
-    );
-
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Text(
-                    'Shoes \nCollection',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 35),
-                  ),
-                ),
-                Expanded(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      hintText: 'Search',
-                      prefixIcon: Icon(Icons.search),
-                      border: border,
-                      enabledBorder: border,
-                      focusedBorder: border,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 100,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) {
-                  final filter = filters[index];
-                  return Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          selectedFilter = filter;
-                        });
-                      },
-                      child: Chip(
-                        label: Text(filter),
-                        labelStyle: TextStyle(fontSize: 16),
-                        padding: EdgeInsets.all(12.0),
-                        side: BorderSide(
-                          color: Color.fromRGBO(157, 199, 241, 1),
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(50)),
-                        ),
-                        backgroundColor: selectedFilter == filter
-                            ? Theme.of(context).colorScheme.primary
-                            : Color.fromRGBO(191, 154, 224, 1),
-                      ),
-                    ),
-                  );
-                },
-                itemCount: filters.length,
-              ),
-            ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: products.length,
-                itemBuilder: (context, index) {
-                  final product = products[index];
-                  return ProductCard(
-                    title: product['title'] as String,
-                    price: product['price'] as double,
-                    image: product['imageUrl'] as String,
-                    backgroundColor: index.isEven
-                        ? Color.fromRGBO(191, 154, 224, 1)
-                        : Colors.white,
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
+      // IndexedStack displays the page based on currentPage index
+      body: IndexedStack(index: currentPage, children: pages),
+      // Bottom navigation bar for switching between pages
+      bottomNavigationBar: BottomNavigationBar(
+        selectedFontSize: 0, // Hide font labels
+        unselectedFontSize: 0,
+        currentIndex: currentPage, // Highlight current page
+        iconSize: 34,
+        // Handle page switch when navigation item is tapped
+        onTap: (int newIndex) {
+          setState(() {
+            currentPage = newIndex; // Update current page index
+          });
+        },
+        // Navigation items for Products and Cart
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: '',
+          ), // Product list icon
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shop_2_outlined),
+            label: '',
+          ), // Cart icon
+        ],
       ),
     );
   }
